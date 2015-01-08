@@ -1,0 +1,32 @@
+{
+	"name": "radishconcepts/edd-vatinfoeu",
+	"description": "Integrates the EU VAT API with your Easy Digital Downloads powered website",
+	"type": "wordpress-plugin",
+	"support"    : {
+		"issues": "https://github.com/radishconcepts/edd-euvatinfo-dev/issues",
+		"source": "https://github.com/radishconcepts/edd-euvatinfo-dev"
+	},
+	"require": {
+		"xrstf/composer-php52": "1.*",
+		"composer/installers": "~1.0"
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"xrstf\\Composer52\\Generator::onPostInstallCmd"
+		],
+		"post-update-cmd": [
+			"xrstf\\Composer52\\Generator::onPostInstallCmd"
+		],
+		"post-autoload-dump": [
+			"xrstf\\Composer52\\Generator::onPostInstallCmd"
+		]
+	},
+	"autoload": {
+		"classmap": [
+			"includes/abstracts",
+			"includes/admin",
+			"includes/core",
+			"includes/repositories"
+		]
+	}
+}
