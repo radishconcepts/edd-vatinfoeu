@@ -44,10 +44,11 @@ class VIEU_Country_Repository extends VIEU_Abstract_Repository {
 			foreach ( $countries as $country ) {
 				$return_array[] = $country;
 			}
+
+			$this->save_data($return_array);
+			return $return_array;
 		}
 
-		$this->save_data($return_array);
-
-		return $return_array;
+		return array();
 	}
 }
