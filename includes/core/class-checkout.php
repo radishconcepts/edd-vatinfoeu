@@ -10,6 +10,7 @@ class EDD_VIEU_Checkout {
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_script' ) );
 		add_action( 'edd_cc_billing_bottom', array( $this, 'add_vat_number_field' ) );
+		add_action( 'edd_cc_billing_bottom', array( $this, 'location_confirmation' ) );
 		add_filter( 'edd_checkout_error_checks', array( $this, 'check_vat_number' ), 10, 2 );
 
 		add_action( 'wp_ajax_euvi_maybe_vat_exempt', array( $this, 'maybe_vat_exempt' ) );
@@ -46,6 +47,40 @@ class EDD_VIEU_Checkout {
 				<input type="text" size="6" name="vieu_vat_number" id="vieu_vat_number" class="vieu_vat_number edd-input" placeholder="VAT Number"/>
 			</p>
 	<?php
+	}
+
+	public function location_confirmation() {
+		if ( $this->location_confirmation_required() ) {
+			$location_confirmation_is_checked = isset( $_POST['euvi_location_confirmation'] );
+
+			echo '<p class="form-row location_confirmation terms">';
+			echo '<input type="checkbox" class="input-checkbox" name="euvi_location_confirmation"'. checked( $location_confirmation_is_checked, true ) .' id="euvi_location_confirmation" />';
+			echo '<label for="euvi_location_confirmation" class="checkbox">I am established, have my permanent address, or usually reside in the country provided in this form.</label>';
+			echo '</p>';
+		}
+	}
+
+	private function location_confirmation_required() {
+		if ( false === EDD()->session->get( 'euvi_vat_exempt' ) ) {
+			if( is_user_logged_in() ) {
+				$user_address = get_user_meta( get_current_user_id(), '_edd_user_address', true );
+				if ( isset( $user_address['country'] ) ) {
+					$taxed_country = $user_address['country'];
+					return ( $taxed_country !== $this->get_country_by_ip() );
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	private function get_country_by_ip() {
+		$geolocate = new VIEU_Geolocate();
+		return $geolocate->geolocate_ip();
 	}
 
 	public function check_vat_number( $valid_data, $data ) {
