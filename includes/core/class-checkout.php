@@ -11,7 +11,7 @@ class EDD_VIEU_Checkout {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_script' ) );
 		add_action( 'edd_cc_billing_bottom', array( $this, 'add_vat_number_field' ) );
 		add_action( 'edd_cc_billing_bottom', array( $this, 'location_confirmation' ) );
-		add_filter( 'edd_checkout_error_checks', array( $this, 'check_vat_number' ), 10, 2 );
+		add_filter( 'edd_checkout_error_checks', array( $this, 'validate_checkout' ), 10, 2 );
 
 		add_action( 'wp_ajax_euvi_maybe_vat_exempt', array( $this, 'maybe_vat_exempt' ) );
 		add_action( 'wp_ajax_nopriv_euvi_maybe_vat_exempt', array( $this, 'maybe_vat_exempt' ) );
@@ -92,8 +92,14 @@ class EDD_VIEU_Checkout {
 		return $geolocate->geolocate_ip();
 	}
 
-	public function check_vat_number( $valid_data, $data ) {
+	public function validate_checkout( $valid_data, $data ) {
 		$this->reset();
+
+		if ( $this->location_confirmation_required() ) {
+			if ( ! isset( $valid_data['euvi_location_confirmation'] ) ) {
+				edd_set_error( 'euvi-location-not-confirmed', 'Your IP Address does not match your billing country. Please confirm you are located within your billing country using the checkbox below.' );
+			}
+		}
 
 		if ( isset( $data['vieu_vat_number'] ) && ! empty( $data['vieu_vat_number'] ) ) {
 			if ( ! $this->validate( $data['vieu_vat_number'], $data['billing_country'] ) ) {
