@@ -13,7 +13,7 @@ class EDD_VIEU_Checkout {
 		add_filter( 'edd_checkout_error_checks', array( $this, 'check_vat_number' ), 10, 2 );
 
 		add_action( 'wp_ajax_euvi_maybe_vat_exempt', array( $this, 'maybe_vat_exempt' ) );
-		add_action( 'wp_ajax_nopriv_euvi_maybe_vat_exempt', array( $this, 'euvi_maybe_vat_exempt' ) );
+		add_action( 'wp_ajax_nopriv_euvi_maybe_vat_exempt', array( $this, 'maybe_vat_exempt' ) );
 	}
 
 	public function maybe_vat_exempt() {
