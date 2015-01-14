@@ -6,6 +6,7 @@ class EDD_VAT_Info_EU {
 			add_action('init', array( $this, 'init' ) );
 
 			new EDD_VIEU_Admin_Tax_Settings();
+			new EDD_VIEU_Admin_Order_Meta();
 		}
 
 		new EDD_VIEU_Checkout();
