@@ -14,6 +14,8 @@ class EDD_VIEU_Checkout {
 
 		add_action( 'wp_ajax_euvi_maybe_vat_exempt', array( $this, 'maybe_vat_exempt' ) );
 		add_action( 'wp_ajax_nopriv_euvi_maybe_vat_exempt', array( $this, 'maybe_vat_exempt' ) );
+
+		add_filter( 'edd_payment_meta', array( $this, 'store_order_data' ) );
 	}
 
 	public function maybe_vat_exempt() {
@@ -57,6 +59,16 @@ class EDD_VIEU_Checkout {
 
 			$this->set_vat_exempt();
 		}
+	}
+
+	public function store_order_data( $payment_meta ) {
+		if ( isset( $_POST['vieu_vat_number'] ) && ! empty( $_POST['vieu_vat_number'] ) ) {
+			$payment_meta['vat_number'] = $_POST['vieu_vat_number'];
+		} else {
+			$payment_meta['vat_number'] = "";
+		}
+
+		return $payment_meta;
 	}
 
 	private function set_vat_exempt() {
