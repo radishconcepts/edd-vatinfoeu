@@ -8,6 +8,7 @@ class EDD_VAT_Info_EU {
 			new EDD_VIEU_Admin_Tax_Settings();
 		}
 
+		new EDD_VIEU_Checkout();
 		new EDD_VIEU_Tax();
 	}
 
