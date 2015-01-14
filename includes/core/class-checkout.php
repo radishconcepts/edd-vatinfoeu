@@ -52,30 +52,39 @@ class EDD_VIEU_Checkout {
 	public function location_confirmation() {
 		if ( $this->location_confirmation_required() ) {
 			$location_confirmation_is_checked = isset( $_POST['euvi_location_confirmation'] );
+			$customer_country = $this->get_country_by_code( $this->get_customer_country() )->name;
 
 			echo '<p class="form-row location_confirmation terms">';
 			echo '<input type="checkbox" class="input-checkbox" name="euvi_location_confirmation"'. checked( $location_confirmation_is_checked, true ) .' id="euvi_location_confirmation" />';
-			echo '<label for="euvi_location_confirmation" class="checkbox">I am established, have my permanent address, or usually reside in the country provided in this form.</label>';
+			echo '<label for="euvi_location_confirmation" class="checkbox">I am established, have my permanent address, or usually reside in '. $customer_country . '</label>';
 			echo '</p>';
 		}
 	}
 
 	private function location_confirmation_required() {
 		if ( false === EDD()->session->get( 'euvi_vat_exempt' ) ) {
-			if( is_user_logged_in() ) {
-				$user_address = get_user_meta( get_current_user_id(), '_edd_user_address', true );
-				if ( isset( $user_address['country'] ) ) {
-					$taxed_country = $user_address['country'];
-					return ( $taxed_country !== $this->get_country_by_ip() );
-				} else {
-					return false;
-				}
-			} else {
-				return false;
-			}
+			$taxed_country = $this->get_customer_country();
+			return ( $taxed_country !== $this->get_country_by_ip() );
 		}
 
 		return false;
+	}
+
+	private function get_customer_country() {
+		if ( isset( $_POST['billing_country'])) {
+			return $_POST['billing_country'];
+		}
+
+		if ( is_user_logged_in() ) {
+			$user_address = get_user_meta( get_current_user_id(), '_edd_user_address', true );
+
+			if ( isset( $user_address['country'] ) ) {
+				return $user_address['country'];
+			}
+		}
+
+		$settings = get_option('edd_settings');
+		return $settings['base_country'];
 	}
 
 	private function get_country_by_ip() {
@@ -121,6 +130,14 @@ class EDD_VIEU_Checkout {
 
 		$validator = new VIEU_VAT_Validator();
 		return $validator->validate_vat($country_code, $vat_number);
+	}
+
+	private function get_country_by_code( $country_code ) {
+		foreach ( $this->countries as $country ) {
+			if ( $country->codes->alpha_2 == $country_code ) {
+				return $country;
+			}
+		}
 	}
 
 	private function is_valid_eu_country( $country_code ) {
