@@ -83,7 +83,7 @@ class EDD_VIEU_Checkout {
 		$output =  '<div id="euvi_location_confirmation">';
 		$output .=  '<p class="form-row location_confirmation terms">';
 		$output .= '<input type="checkbox" class="input-checkbox" name="euvi_location_confirmation"'. checked( $is_checked, true ) .' id="euvi_location_confirmation" />';
-		$output .= '<label for="euvi_location_confirmation" class="checkbox">I am established, have my permanent address, or usually reside in '. $country . '</label>';
+		$output .= '<label style="float: left;" for="euvi_location_confirmation" class="checkbox">I am established, have my permanent address, or usually reside in '. $country . '</label>';
 		$output .= '</p>';
 		$output .= '</div>';
 		return $output;
