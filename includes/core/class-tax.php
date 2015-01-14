@@ -12,6 +12,12 @@ class EDD_VIEU_Tax {
 	}
 
 	public function matched_tax_rates( $rate, $country ) {
+		$exempt = EDD()->session->get( 'euvi_vat_exempt' );
+
+		if ( false !== $exempt ) {
+			return 0;
+		}
+
 		$country_repo = new VIEU_Country_Repository();
 		$vieu_country = $country_repo->get_country_by_code( $country );
 
