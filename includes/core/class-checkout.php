@@ -146,6 +146,12 @@ class EDD_VIEU_Checkout {
 			$payment_meta['vat_number'] = "";
 		}
 
+		if ( $this->location_confirmation_required() ) {
+			$payment_meta['location_confirmation_required'] = "yes";
+		} else {
+			$payment_meta['location_confirmation_required'] = "no";
+		}
+
 		return $payment_meta;
 	}
 
