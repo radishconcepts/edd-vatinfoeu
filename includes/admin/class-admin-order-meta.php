@@ -19,7 +19,7 @@ class EDD_VIEU_Admin_Order_Meta {
 		<div class="column-container">
 			<div class="column">
 				<strong>VAT Number:</strong>&nbsp;
-				<input type="text" name="vatnumber" value="<?php esc_attr_e( $vatnumber ); ?>" class="medium-text" />
+				<?php echo $vatnumber; ?>
 			</div>
 		</div>
 	<?php
