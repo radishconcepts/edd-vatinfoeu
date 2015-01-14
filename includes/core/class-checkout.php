@@ -124,7 +124,7 @@ class EDD_VIEU_Checkout {
 		$this->reset();
 
 		if ( $this->location_confirmation_required() ) {
-			if ( ! isset( $valid_data['euvi_location_confirmation'] ) ) {
+			if ( ! isset( $_POST['euvi_location_confirmation'] ) ) {
 				edd_set_error( 'euvi-location-not-confirmed', 'Your IP Address does not match your billing country. Please confirm you are located within your billing country using the checkbox below.' );
 			}
 		}
