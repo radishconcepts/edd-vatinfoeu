@@ -13,10 +13,31 @@ class EDD_VIEU_Checkout {
 		add_action( 'edd_cc_billing_bottom', array( $this, 'location_confirmation' ) );
 		add_filter( 'edd_checkout_error_checks', array( $this, 'validate_checkout' ), 10, 2 );
 
+		add_action( 'wp_ajax_euvi_maybe_location_confirmation', array( $this, 'maybe_location_confirmation' ) );
+		add_action( 'wp_ajax_nopriv_euvi_maybe_location_confirmation', array( $this, 'maybe_location_confirmation' ) );
+
 		add_action( 'wp_ajax_euvi_maybe_vat_exempt', array( $this, 'maybe_vat_exempt' ) );
 		add_action( 'wp_ajax_nopriv_euvi_maybe_vat_exempt', array( $this, 'maybe_vat_exempt' ) );
 
 		add_filter( 'edd_payment_meta', array( $this, 'store_order_data' ) );
+	}
+
+	public function maybe_location_confirmation() {
+		$this->reset();
+
+		if ( ! $this->location_confirmation_required() ) {
+			wp_die();
+		}
+
+		$taxed_country = $_POST['billing_country'];
+
+		if ( ! $this->is_valid_eu_country( $taxed_country ) ) {
+			wp_die();
+		}
+
+		$taxed_country = $this->get_country_by_code($taxed_country);
+		echo $this->get_location_confirmation_checkbox(false, $taxed_country->name );
+		wp_die();
 	}
 
 	public function maybe_vat_exempt() {

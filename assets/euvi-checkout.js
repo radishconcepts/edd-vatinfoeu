@@ -1,6 +1,31 @@
 jQuery(document).ready(function($) {
 	var $body = $('body');
 
+	$body.on('change', '#billing_country', function() {
+		var postData = {
+			action         : 'euvi_maybe_location_confirmation',
+			billing_country: $('#billing_country').val()
+		};
+
+		$.ajax({
+			type: "POST",
+			data: postData,
+			dataType: "html",
+			url: edd_global_vars.ajaxurl,
+			xhrFields: {
+				withCredentials: true
+			},
+			success: function (location_confirmation_response) {
+				$('#euvi_location_confirmation').remove();
+				$('#edd_cc_address').append(location_confirmation_response)
+			}
+		}).fail(function (data) {
+			if ( window.console && window.console.log ) {
+				console.log( data );
+			}
+		});
+	});
+
 	$body.on('blur', '#vieu_vat_number', function() {
 		var $edd_cc_address = $('#edd_cc_address');
 		var postData = {
