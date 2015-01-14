@@ -130,6 +130,12 @@ class EDD_VIEU_Checkout {
 	}
 
 	private function validate( $vat_number, $country_code ) {
+		$settings = get_option('edd_settings');
+
+		if ( $country_code == $settings['base_country'] ) {
+			return false;
+		}
+
 		if ( ! $this->is_valid_eu_country( $country_code ) ) {
 			return false;
 		}
