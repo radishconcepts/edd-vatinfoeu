@@ -54,11 +54,18 @@ class EDD_VIEU_Checkout {
 			$location_confirmation_is_checked = isset( $_POST['euvi_location_confirmation'] );
 			$customer_country = $this->get_country_by_code( $this->get_customer_country() )->name;
 
-			echo '<p class="form-row location_confirmation terms">';
-			echo '<input type="checkbox" class="input-checkbox" name="euvi_location_confirmation"'. checked( $location_confirmation_is_checked, true ) .' id="euvi_location_confirmation" />';
-			echo '<label for="euvi_location_confirmation" class="checkbox">I am established, have my permanent address, or usually reside in '. $customer_country . '</label>';
-			echo '</p>';
+			echo $this->get_location_confirmation_checkbox( $location_confirmation_is_checked, $customer_country );
 		}
+	}
+
+	private function get_location_confirmation_checkbox( $is_checked, $country ) {
+		$output =  '<div id="euvi_location_confirmation">';
+		$output .=  '<p class="form-row location_confirmation terms">';
+		$output .= '<input type="checkbox" class="input-checkbox" name="euvi_location_confirmation"'. checked( $is_checked, true ) .' id="euvi_location_confirmation" />';
+		$output .= '<label for="euvi_location_confirmation" class="checkbox">I am established, have my permanent address, or usually reside in '. $country . '</label>';
+		$output .= '</p>';
+		$output .= '</div>';
+		return $output;
 	}
 
 	private function location_confirmation_required() {
