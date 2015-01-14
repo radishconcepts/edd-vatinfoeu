@@ -25,14 +25,28 @@ class EDD_VIEU_Checkout {
 
 	public function check_vat_number( $valid_data, $data ) {
 		if ( isset( $data['vieu_vat_number'] ) && ! empty( $data['vieu_vat_number'] ) ) {
-			if ( ! $this->validate( $data['vieu_vat_number'], 'NL' ) ) {
+			if ( ! $this->validate( $data['vieu_vat_number'], $data['billing_country'] ) ) {
 				edd_set_error( 'euvi-invalid-vat', sprintf( 'The VAT number (%s) is invalid for your billing country.', $data['vieu_vat_number'] ) );
 			}
 		}
 	}
 
 	private function validate( $vat_number, $country_code ) {
+		if ( ! $this->is_valid_eu_country( $country_code ) ) {
+			return false;
+		}
+
 		$validator = new VIEU_VAT_Validator();
 		return $validator->validate_vat($country_code, $vat_number);
+	}
+
+	private function is_valid_eu_country( $country_code ) {
+		foreach ( $this->countries as $country ) {
+			if ( $country->codes->alpha_2 == $country_code ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
