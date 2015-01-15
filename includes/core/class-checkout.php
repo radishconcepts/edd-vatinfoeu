@@ -47,7 +47,11 @@ class EDD_VIEU_Checkout {
 		$vat_number = $_POST['vat_number'];
 
 		if ( $this->validate( $vat_number, $billing_country ) ) {
-			$this->set_vat_exempt();
+			$settings = get_option('edd_settings');
+
+			if ( $billing_country !== $settings['base_country'] ) {
+				$this->set_vat_exempt();
+			}
 		}
 	}
 
@@ -135,7 +139,11 @@ class EDD_VIEU_Checkout {
 				return;
 			}
 
-			$this->set_vat_exempt();
+			$settings = get_option('edd_settings');
+
+			if ( $data['billing_country'] !== $settings['base_country'] ) {
+				$this->set_vat_exempt();
+			}
 		}
 	}
 
@@ -164,12 +172,6 @@ class EDD_VIEU_Checkout {
 	}
 
 	private function validate( $vat_number, $country_code ) {
-		$settings = get_option('edd_settings');
-
-		if ( $country_code == $settings['base_country'] ) {
-			return false;
-		}
-
 		if ( ! $this->is_valid_eu_country( $country_code ) ) {
 			return false;
 		}
