@@ -5,7 +5,7 @@
  * Description: Integrates the vatinfo.eu API with your Easy Digital Downloads powered website
  * Author: Radish Concepts
  * Author URI: http://www.radishconcepts.com
- * Version: 0.1.0
+ * Version: 1.0.0
  */
 
 if ( ! class_exists( 'EDD_VAT_Info_EU' ) ) {
