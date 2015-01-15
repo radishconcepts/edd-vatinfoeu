@@ -1,4 +1,4 @@
-=== WooCommerce - excelling eCommerce ===
+=== VAT Info EU for Easy Digital Downloads ===
 Contributors: radishconcepts
 Tags: ecommerce, e-commerce, commerce, digital downloads, vat, tax, easy digital downloads
 Requires at least: 3.8
