@@ -46,8 +46,12 @@ class EDD_VIEU_Checkout {
 		$billing_country = ( empty( $_POST['billing_country'] ) ) ? edd_get_shop_country() : $_POST['billing_country'];
 		$vat_number = $_POST['vat_number'];
 
-		if ( $this->validate( $vat_number, $billing_country ) ) {
-			$this->set_vat_exempt();
+		if ( $this->validate_vat_number( $vat_number, $billing_country ) ) {
+			$settings = get_option('edd_settings');
+
+			if ( $billing_country !== $settings['base_country'] ) {
+				$this->set_vat_exempt();
+			}
 		}
 	}
 
@@ -130,12 +134,16 @@ class EDD_VIEU_Checkout {
 		}
 
 		if ( isset( $data['vieu_vat_number'] ) && ! empty( $data['vieu_vat_number'] ) ) {
-			if ( ! $this->validate( $data['vieu_vat_number'], $data['billing_country'] ) ) {
+			if ( ! $this->validate_vat_number( $data['vieu_vat_number'], $data['billing_country'] ) ) {
 				edd_set_error( 'euvi-invalid-vat', sprintf( 'The VAT number (%s) is invalid for your billing country.', $data['vieu_vat_number'] ) );
 				return;
 			}
 
-			$this->set_vat_exempt();
+			$settings = get_option('edd_settings');
+
+			if ( $data['billing_country'] !== $settings['base_country'] ) {
+				$this->set_vat_exempt();
+			}
 		}
 	}
 
@@ -163,13 +171,7 @@ class EDD_VIEU_Checkout {
 		EDD()->session->set( 'euvi_vat_exempt', false );
 	}
 
-	private function validate( $vat_number, $country_code ) {
-		$settings = get_option('edd_settings');
-
-		if ( $country_code == $settings['base_country'] ) {
-			return false;
-		}
-
+	private function validate_vat_number( $vat_number, $country_code ) {
 		if ( ! $this->is_valid_eu_country( $country_code ) ) {
 			return false;
 		}
