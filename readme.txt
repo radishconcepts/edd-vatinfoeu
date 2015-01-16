@@ -13,6 +13,8 @@ Enables you to use the VAT Info EU service within Easy Digital Downloads.
 
 Because of the B2C 2015 EU VAT changes you have to charge your clients the applicable VAT of their country. The VAT Info EU service automates this for you. So you can stick to your core business and still obey this particular law. This service will make sure to get your customers the right VAT rate, will collect the location information of your customers and can exempt VAT for B2B purchases.
 
+You can find more information about [our service and API](https://vatinfo.eu/) on our website.
+
 == Installation ==
 
 You can find extensive documentation on [how to install plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins) in the Codex.
